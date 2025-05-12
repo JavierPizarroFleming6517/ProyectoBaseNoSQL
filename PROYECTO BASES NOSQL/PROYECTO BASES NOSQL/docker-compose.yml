@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  rocksdb:
+    build:
+      context: ./rocksdb
+    container_name: rocksdb
+    ports:
+      - "8080:8080"
+    networks:
+      - taller5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - "8000:8000"  # Mapeo correcto del puerto
+    environment:
+      - ROCKSDB_HOST=rocksdb
+      - ROCKSDB_PORT=8080
+    depends_on:
+      - rocksdb
+    networks:
+      - taller5
+
+networks:
+  taller5:
+    driver: bridge
